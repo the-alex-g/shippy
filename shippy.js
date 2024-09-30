@@ -1,11 +1,14 @@
 function Shippy() {
     tShippy = new Sprite(scene, "myblock.png", 32, 32);
+    
     tShippy.maxSpeed = 10;
     tShippy.minSpeed = -3;
+    tShippy.canShoot = true;
     tShippy.bullets = new SpriteStack(Bullet, 10);
+    
     tShippy.setSpeed(0);
     tShippy.setAngle(0);
-    tShippy.canShoot = true;
+
     tShippy.checkKeys = function(){
         if (keysDown[K_LEFT] || keysDown[K_A]){
             this.changeAngleBy(-5);
@@ -25,6 +28,7 @@ function Shippy() {
                 this.setSpeed(this.minSpeed);
             } // end if
         } // end if
+
         if (keysDown[K_SPACE]) {
             if (this.canShoot) {
               bullet = this.bullets.getNextHidden();
@@ -35,17 +39,20 @@ function Shippy() {
             this.canShoot = true;
         } // end if
     } // end checkKeys
+
     tShippy.update = function() {
         this.checkKeys();
         this.updateSelf();
         this.bullets.update();
-    }
+    } // end update
+
     return tShippy;
 } // end Shippy
 
 
 function Bullet() {
     tBullet = new Sprite(scene, "myblock.png", 10, 10);
+    
     tBullet.setBoundAction(DIE);
 
     tBullet.fire = function(parent) {
