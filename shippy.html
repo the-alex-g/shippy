@@ -8,11 +8,14 @@
         <script type="text/javascript">
             var scene;
             var shippy;
+            var enemy;
 
             function init() {
                 scene = new Scene();
                 shippy = new Shippy();
+                enemy = new Enemy();
                 shippy.setPosition(400, 300);
+                enemy.launch();
                 scene.setBG("lightblue");
                 scene.start();
             } // end init
@@ -20,6 +23,9 @@
             function update() {
                 scene.clear();
                 shippy.update();
+                
+                enemy.chase(shippy);
+                enemy.update();
             } // end update
         </script>
     </head>

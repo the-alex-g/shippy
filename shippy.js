@@ -64,3 +64,28 @@ function Bullet() {
 
     return tBullet;
 } // end Bullet
+
+
+function Enemy() {
+    tEnemy = new Sprite(scene, "myblock.png", 40, 40);
+    tEnemy.setBoundAction(BOUNCE);
+
+    tEnemy.launch = function() {
+        this.setPosition(Math.random() * this.cWidth, Math.random() * this.cHeight);
+
+        this.setSpeed(5);
+    } // end launch
+
+    tEnemy.chase = function(target) {
+        this.setAngle(getAngleBetween(this, target) * 360 / 6.28 + 90);
+    }
+
+    return tEnemy;
+}
+
+
+function getAngleBetween(from, to) {
+    dx = to.x - from.x;
+    dy = to.y - from.y;
+    return Math.atan2(dy, dx);
+}
