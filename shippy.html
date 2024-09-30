@@ -1,0 +1,28 @@
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>mytest.html</title>
+        <script type="text/javascript" src="../simpleGame.js"></script>
+        <script type="text/javascript" src="../spriteStack.js"></script>
+        <script type="text/javascript" src="shippy.js"></script>
+        <script type="text/javascript">
+            var scene;
+            var shippy;
+
+            function init() {
+                scene = new Scene();
+                shippy = new Shippy();
+                shippy.setPosition(400, 300);
+                scene.start();
+            } // end init
+
+            function update() {
+                scene.clear();
+                shippy.update();
+            } // end update
+        </script>
+    </head>
+    <body onload="init()">
+        <div id="output">output</div>
+    </body>
+</html>
