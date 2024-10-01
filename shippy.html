@@ -35,8 +35,18 @@
                                     enemy.hide();
                                     bullet.hide();
                                 } // end if
-                            } /// end function
+                            } // end function
                         );
+                    } // end function
+                );
+
+                // collide enemy bullets with player
+                enemyBullets.forEachVisible(
+                    function(bullet, index, array) {
+                        if (getDistanceBetween(bullet, shippy) < bullet.width + shippy.width) {
+                            bullet.hide();
+                            shippy.health -= 1;
+                        } // end if
                     } // end function
                 );
             } // end collide
@@ -48,6 +58,10 @@
                 } // end if
             } // end checkRespawn
 
+            function updateHealth() {
+                document.getElementById("playerHealth").innerText = "Health: " + shippy.health;
+            }
+
             function update() {
                 scene.clear();
 
@@ -57,9 +71,11 @@
 
                 collide();
                 checkRespawn();
+                updateHealth();
             } // end update
         </script>
     </head>
     <body onload="init()">
+        <div id="playerHealth">Health: 10</div>
     </body>
 </html>
