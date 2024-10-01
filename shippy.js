@@ -115,3 +115,10 @@ function Enemy() {
 
     return tEnemy;
 } // end Enemy
+
+
+function Explosion() {
+    tExplosion = new Particles(scene, 20, 'red');
+    tExplosion.setContinuous(false);
+    return tExplosion;
+}

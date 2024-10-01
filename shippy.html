@@ -1,7 +1,7 @@
 <html lang="en-US">
     <head>
         <meta charset="UTF-8">
-        <title>mytest.html</title>
+        <title>shippy.html</title>
         <script type="text/javascript" src="../gameEngine/simpleGame.js"></script>
         <script type="text/javascript" src="../gameEngine/gameExtension.js"></script>
         <script type="text/javascript" src="shippy.js"></script>
@@ -9,6 +9,7 @@
             var scene;
             var shippy;
             var enemies;
+            var explosions;
             var enemyBullets;
             var enemyTimer = new Timer();
 
@@ -19,6 +20,8 @@
 
                 enemies = new SpriteStack(Enemy, 5);
                 enemies.forEach(function(value, index, array) {value.launch();});
+
+                explosions = new SpriteStack(Explosion, 6);
 
                 shippy.setPosition(400, 300);
                 scene.setBG("lightblue");
@@ -33,6 +36,9 @@
                             function(enemy, index2, array2) {
                                 if (getDistanceBetween(bullet, enemy) < bullet.width + enemy.width) {
                                     enemy.hide();
+                                    explosion = explosions.getNextHidden();
+                                    explosion.setPosition(enemy.x, enemy.y);
+                                    explosion.restart();
                                     bullet.hide();
                                 } // end if
                             } // end function
@@ -70,6 +76,7 @@
                 shippy.update();
                 enemies.update();
                 enemyBullets.update();
+                explosions.update();
 
                 collide();
                 checkRespawn();
