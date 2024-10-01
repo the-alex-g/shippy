@@ -52,7 +52,9 @@
             } // end collide
 
             function checkRespawn() {
-                if (enemyTimer.getElapsedTime() >= 5 && enemies.getVisibleCount() < 5) {
+                currentEnemies = enemies.getVisibleCount();
+                timeUntilRespawn = 5 / (enemies.count + 1 - currentEnemies);
+                if (enemyTimer.getElapsedTime() >= timeUntilRespawn && currentEnemies < enemies.count) {
                     enemies.getNextHidden().launch();
                     enemyTimer.reset();
                 } // end if
