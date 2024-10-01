@@ -10,6 +10,7 @@
             var shippy;
             var enemies;
             var enemyBullets;
+            var enemyTimer = new Timer();
 
             function init() {
                 scene = new Scene();
@@ -23,14 +24,8 @@
                 scene.setBG("lightblue");
                 scene.start();
             } // end init
-
-            function update() {
-                scene.clear();
-
-                shippy.update();
-                enemies.update();
-                enemyBullets.update();
-                
+            
+            function collide() {
                 // collide ship bullets with enemies
                 shippy.bullets.forEachVisible(
                     function(bullet, index, array) {
@@ -44,6 +39,24 @@
                         );
                     } // end function
                 );
+            } // end collide
+
+            function checkRespawn() {
+                if (enemyTimer.getElapsedTime() >= 5 && enemies.getVisibleCount() < 5) {
+                    enemies.getNextHidden().launch();
+                    enemyTimer.reset();
+                } // end if
+            } // end checkRespawn
+
+            function update() {
+                scene.clear();
+
+                shippy.update();
+                enemies.update();
+                enemyBullets.update();
+
+                collide();
+                checkRespawn();
             } // end update
         </script>
     </head>
