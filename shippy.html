@@ -9,10 +9,12 @@
             var scene;
             var shippy;
             var enemy;
+            var enemyBullets;
 
             function init() {
                 scene = new Scene();
                 shippy = new Shippy();
+                enemyBullets = new SpriteStack(Bullet, 10);
                 enemy = new Enemy();
                 shippy.setPosition(400, 300);
                 enemy.launch();
@@ -23,9 +25,8 @@
             function update() {
                 scene.clear();
                 shippy.update();
-                
-                enemy.chase(shippy);
                 enemy.update();
+                enemyBullets.update();
             } // end update
         </script>
     </head>

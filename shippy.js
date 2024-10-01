@@ -68,7 +68,9 @@ function Bullet() {
 
 function Enemy() {
     tEnemy = new Sprite(scene, "myblock.png", 40, 40);
-    tEnemy.setBoundAction(BOUNCE);
+    tEnemy.turnDirection = 0;
+    tEnemy.target = shippy;
+    tEnemy.shootTimer = new Timer();
 
     tEnemy.launch = function() {
         this.setPosition(Math.random() * this.cWidth, Math.random() * this.cHeight);
@@ -76,16 +78,46 @@ function Enemy() {
         this.setSpeed(5);
     } // end launch
 
-    tEnemy.chase = function(target) {
-        this.setAngle(getAngleBetween(this, target) * 360 / 6.28 + 90);
-    }
+    tEnemy.chase = function() {
+        angle = getAngleBetween(this, this.target) - this.moveAngle * 180 / Math.PI - 90;
+        angle %= 360;
+        if (Math.abs(angle) > 10) {
+            if (this.turnDirection == 0) {
+                if (Math.random() < 0.5) {
+                    this.turnDirection = 1;
+                } else {
+                    this.turnDirection = -1;
+                } // end if
+            } // end if
+
+            this.changeAngleBy(5 * this.turnDirection);
+        } else {
+            this.turnDirection = 0;
+        } // end if 
+    } // end chase
+
+    tEnemy.shoot = function() {
+        if (this.shootTimer.getElapsedTime() >= 0.25) {
+            bullet = enemyBullets.getNextHidden();
+            bullet.fire(this);
+            this.shootTimer.reset();
+        } // end if
+    } // end shoot
+
+    tEnemy.update = function() {
+        this.chase();
+        if (this.turnDirection == 0) {
+            this.shoot();
+        } // end if
+        this.updateSelf();
+    } // end update
 
     return tEnemy;
-}
+} // end Enemy
 
 
 function getAngleBetween(from, to) {
     dx = to.x - from.x;
     dy = to.y - from.y;
-    return Math.atan2(dy, dx);
-}
+    return Math.atan2(dy, dx) * 180 / Math.PI + 90;
+} // end getAngleBetween
