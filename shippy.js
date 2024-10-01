@@ -57,7 +57,7 @@ function Bullet() {
     tBullet.setBoundAction(DIE);
 
     tBullet.fire = function(parent) {
-        this.setAngle(parent.moveAngle * 360 / 6.283185 + 90);
+        this.setAngle(parent.moveAngle * 180 / Math.PI + 90);
         this.setPosition(parent.x, parent.y);
         this.setSpeed(20);
         this.show();
@@ -121,4 +121,42 @@ function Explosion() {
     tExplosion = new Particles(scene, 20, 'red');
     tExplosion.setContinuous(false);
     return tExplosion;
+} // end Explosion
+
+
+function SpaceBackground(scene) {
+    this.scene = scene;
+    this.canvas = scene.canvas;
+    this.context = this.canvas.getContext("2d");
+    this.cWidth = parseInt(this.canvas.width);
+    this.cHeight = parseInt(this.canvas.height);
+
+    this.minStars = 10;
+    this.maxStars = 20;
+
+    this.pointXs = [];
+    this.pointYs = [];
+    this.starColors = [];
+    this.starRadii = [];
+
+    starOptions = [
+        ['red', 3],
+        ['lightblue', 6],
+        ['orange', 4],
+        ['yellow', 5]
+    ];
+
+    for (let i = 0; i < this.minStars + (this.maxStars - this.minStars) * Math.random(); i++) {
+        this.pointXs.push(this.cWidth * Math.random());
+        this.pointYs.push(this.cHeight * Math.random());
+        starOption = starOptions[Math.floor(starOptions.length * Math.random())];
+        this.starColors.push(starOption[0]);
+        this.starRadii.push(starOption[1]);
+    }
+
+    this.update = function() {
+        for (let i = 0; i < this.pointXs.length; i++) {
+            drawCircle(this.context, this.pointXs[i], this.pointYs[i], this.starColors[i], this.starRadii[i])
+        }
+    }
 }

@@ -12,10 +12,12 @@
             var explosions;
             var enemyBullets;
             var enemyTimer = new Timer();
+            var bg;
 
             function init() {
                 scene = new Scene();
                 shippy = new Shippy();
+                bg = new SpaceBackground(scene)
                 enemyBullets = new SpriteStack(Bullet, 10);
 
                 enemies = new SpriteStack(Enemy, 5);
@@ -24,7 +26,7 @@
                 explosions = new SpriteStack(Explosion, 6);
 
                 shippy.setPosition(400, 300);
-                scene.setBG("lightblue");
+                scene.setBG("black");
                 scene.start();
             } // end init
             
@@ -73,6 +75,7 @@
             function update() {
                 scene.clear();
 
+                bg.update();
                 shippy.update();
                 enemies.update();
                 enemyBullets.update();
