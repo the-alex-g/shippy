@@ -115,17 +115,3 @@ function Enemy() {
 
     return tEnemy;
 } // end Enemy
-
-
-function getAngleBetween(from, to) {
-    dx = to.x - from.x;
-    dy = to.y - from.y;
-    return Math.atan2(dy, dx) * 180 / Math.PI + 90;
-} // end getAngleBetween
-
-
-function getDistanceBetween(from, to) {
-    dx = from.x - to.x;
-    dy = from.y - to.y;
-    return Math.sqrt(dx * dx + dy * dy);
-}
