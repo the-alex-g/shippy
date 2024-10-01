@@ -74,7 +74,7 @@ function Enemy() {
 
     tEnemy.launch = function() {
         this.setPosition(Math.random() * this.cWidth, Math.random() * this.cHeight);
-
+        this.show();
         this.setSpeed(5);
     } // end launch
 
@@ -97,7 +97,7 @@ function Enemy() {
     } // end chase
 
     tEnemy.shoot = function() {
-        if (this.shootTimer.getElapsedTime() >= 0.25) {
+        if (this.shootTimer.getElapsedTime() >= 0.5) {
             bullet = enemyBullets.getNextHidden();
             bullet.fire(this);
             this.shootTimer.reset();
@@ -121,3 +121,10 @@ function getAngleBetween(from, to) {
     dy = to.y - from.y;
     return Math.atan2(dy, dx) * 180 / Math.PI + 90;
 } // end getAngleBetween
+
+
+function getDistanceBetween(from, to) {
+    dx = from.x - to.x;
+    dy = from.y - to.y;
+    return Math.sqrt(dx * dx + dy * dy);
+}

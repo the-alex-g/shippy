@@ -8,25 +8,42 @@
         <script type="text/javascript">
             var scene;
             var shippy;
-            var enemy;
+            var enemies;
             var enemyBullets;
 
             function init() {
                 scene = new Scene();
                 shippy = new Shippy();
                 enemyBullets = new SpriteStack(Bullet, 10);
-                enemy = new Enemy();
+
+                enemies = new SpriteStack(Enemy, 5);
+                enemies.forEach(function(value, index, array) {value.launch();});
+
                 shippy.setPosition(400, 300);
-                enemy.launch();
                 scene.setBG("lightblue");
                 scene.start();
             } // end init
 
             function update() {
                 scene.clear();
+
                 shippy.update();
-                enemy.update();
+                enemies.update();
                 enemyBullets.update();
+                
+                // collide ship bullets with enemies
+                shippy.bullets.forEachVisible(
+                    function(bullet, index, array) {
+                        enemies.forEachVisible(
+                            function(enemy, index2, array2) {
+                                if (getDistanceBetween(bullet, enemy) < bullet.width + enemy.width) {
+                                    enemy.hide();
+                                    bullet.hide();
+                                } // end if
+                            } /// end function
+                        );
+                    } // end function
+                );
             } // end update
         </script>
     </head>
