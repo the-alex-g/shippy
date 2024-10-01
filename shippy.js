@@ -1,5 +1,5 @@
 function Shippy() {
-    tShippy = new Sprite(scene, "myblock.png", 32, 32);
+    tShippy = new Sprite(scene, "images/player.png", 75 / 2, 112 / 2);
     
     tShippy.maxSpeed = 10;
     tShippy.minSpeed = -3;
@@ -52,7 +52,7 @@ function Shippy() {
 
 
 function Bullet() {
-    tBullet = new Sprite(scene, "myblock.png", 10, 10);
+    tBullet = new Sprite(scene, "images/laserBlue09.png", 10, 10);
     
     tBullet.setBoundAction(DIE);
 
@@ -67,8 +67,18 @@ function Bullet() {
 } // end Bullet
 
 
+function EnemyBullet() {
+    tBullet = new Bullet();
+    tBullet.image.src = "images/greenLaser.png";
+    tBullet.width = 12;
+    tBullet.height = 5;
+    return tBullet;
+}
+
+
 function Enemy() {
-    tEnemy = new Sprite(scene, "myblock.png", 40, 40);
+    tEnemy = new Sprite(scene, "images/enemy1.png", 84/2, 93/2);
+    tEnemy.setImgAngle(90);
     tEnemy.turnDirection = 0;
     tEnemy.target = shippy;
     tEnemy.shootTimer = new Timer();

@@ -18,7 +18,7 @@
                 scene = new Scene();
                 shippy = new Shippy();
                 bg = new SpaceBackground(scene)
-                enemyBullets = new SpriteStack(Bullet, 10);
+                enemyBullets = new SpriteStack(EnemyBullet, 10);
 
                 enemies = new SpriteStack(Enemy, 5);
                 enemies.forEach(function(value, index, array) {value.launch();});
