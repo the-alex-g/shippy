@@ -94,13 +94,22 @@ function Enemy() {
     tEnemy.shootTimer = new Timer();
     tEnemy.type = TYPE_NORMAL;
     tEnemy.shield = new Shield(tEnemy);
+    tEnemy.cooldown = 0.5;
 
     tEnemy.setType = function(newType) {
         this.type = newType;
         if (this.type == TYPE_SHIELD) {
             this.shield.show();
+            this.cooldown = 0.5;
+            this.setSpeed(5);
+        } else if (this.type == TYPE_ADVANCED) {
+            this.shield.hide();
+            this.cooldown = 0.4;
+            this.setSpeed(6);
         } else {
             this.shield.hide();
+            this.cooldown = 0.5;
+            this.setSpeed(5);
         } // end if
 
         this.image.src = "images/enemy" + this.type + ".png";
@@ -109,11 +118,12 @@ function Enemy() {
     tEnemy.launch = function() {
         this.setPosition(Math.random() * this.cWidth, Math.random() * this.cHeight);
         this.show();
-        this.setSpeed(5);
 
         typeChance = Math.random() * 100;
-        if (typeChance < 25) {
+        if (typeChance < 20) {
             this.setType(TYPE_SHIELD);
+        } else if (typeChance < 30) {
+            this.setType(TYPE_ADVANCED);
         } else {
             this.setType(TYPE_NORMAL);
         } // end if
@@ -131,14 +141,14 @@ function Enemy() {
                 } // end if
             } // end if
 
-            this.changeAngleBy(5 * this.turnDirection);
+            this.changeAngleBy(this.speed * this.turnDirection);
         } else {
             this.turnDirection = 0;
         } // end if 
     } // end chase
 
     tEnemy.shoot = function() {
-        if (this.shootTimer.getElapsedTime() >= 0.5) {
+        if (this.shootTimer.getElapsedTime() >= this.cooldown) {
             bullet = enemyBullets.getNextHidden();
             bullet.fire(this);
             this.shootTimer.reset();
@@ -248,3 +258,4 @@ function Shield(owner) {
 
 TYPE_SHIELD = 1;
 TYPE_NORMAL = 0;
+TYPE_ADVANCED = 2;
