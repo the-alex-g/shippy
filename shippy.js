@@ -87,16 +87,36 @@ function EnemyBullet() {
 
 
 function Enemy() {
-    tEnemy = new Sprite(scene, "images/enemy1.png", 84/2, 93/2);
+    tEnemy = new Sprite(scene, "images/enemy0.png", 84/2, 93/2);
     tEnemy.setImgAngle(90);
     tEnemy.turnDirection = 0;
     tEnemy.target = shippy;
     tEnemy.shootTimer = new Timer();
+    tEnemy.type = TYPE_NORMAL;
+    tEnemy.shield = new Shield(tEnemy);
+
+    tEnemy.setType = function(newType) {
+        this.type = newType;
+        if (this.type == TYPE_SHIELD) {
+            this.shield.show();
+        } else {
+            this.shield.hide();
+        } // end if
+
+        this.image.src = "images/enemy" + this.type + ".png";
+    }
 
     tEnemy.launch = function() {
         this.setPosition(Math.random() * this.cWidth, Math.random() * this.cHeight);
         this.show();
         this.setSpeed(5);
+
+        typeChance = Math.random() * 100;
+        if (typeChance < 25) {
+            this.setType(TYPE_SHIELD);
+        } else {
+            this.setType(TYPE_NORMAL);
+        } // end if
     } // end launch
 
     tEnemy.chase = function() {
@@ -131,10 +151,22 @@ function Enemy() {
             this.shoot();
         } // end if
         this.updateSelf();
+
+        if (this.type == TYPE_SHIELD) {
+            this.shield.update();
+        }
     } // end update
 
     tEnemy.hit = function() {
-        this.hide();
+        if (this.type == TYPE_SHIELD) {
+            if (this.shield.visible) {
+                this.shield.hit();
+            } else {
+                this.hide();
+            } // end if
+        } else {
+            this.hide();
+        } // end if
     } // end hit
 
     return tEnemy;
@@ -212,3 +244,7 @@ function Shield(owner) {
 
     return tShield;
 }
+
+
+TYPE_SHIELD = 1;
+TYPE_NORMAL = 0;
