@@ -37,10 +37,12 @@
                         enemies.forEachVisible(
                             function(enemy, index2, array2) {
                                 if (getDistanceBetween(bullet, enemy) < bullet.width + enemy.width) {
-                                    enemy.hide();
-                                    explosion = explosions.getNextHidden();
-                                    explosion.setPosition(enemy.x, enemy.y);
-                                    explosion.restart();
+                                    enemy.hit();
+                                    if (enemy.visible == false) {
+                                        explosion = explosions.getNextHidden();
+                                        explosion.setPosition(enemy.x, enemy.y);
+                                        explosion.restart();
+                                    } // end if
                                     bullet.hide();
                                 } // end if
                             } // end function
@@ -53,7 +55,7 @@
                     function(bullet, index, array) {
                         if (getDistanceBetween(bullet, shippy) < bullet.width + shippy.width) {
                             bullet.hide();
-                            shippy.health -= 1;
+                            shippy.hit();
                         } // end if
                     } // end function
                 );
@@ -89,5 +91,6 @@
     </head>
     <body onload="init()">
         <div id="playerHealth">Health: 10</div>
+        <div>Images courtesy of Kenny</div>
     </body>
 </html>

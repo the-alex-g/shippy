@@ -6,6 +6,7 @@ function Shippy() {
     tShippy.health = 10;
     tShippy.canShoot = true;
     tShippy.bullets = new SpriteStack(Bullet, 10);
+    tShippy.shield = new Shield(tShippy);
     
     tShippy.setSpeed(0);
     tShippy.setAngle(0);
@@ -45,7 +46,16 @@ function Shippy() {
         this.checkKeys();
         this.updateSelf();
         this.bullets.update();
+        this.shield.update();
     } // end update
+
+    tShippy.hit = function() {
+        if (this.shield.visible) {
+            this.shield.hit();
+        } else {
+            this.health -= 1;
+        } // end if
+    } // end hit
 
     return tShippy;
 } // end Shippy
@@ -123,6 +133,10 @@ function Enemy() {
         this.updateSelf();
     } // end update
 
+    tEnemy.hit = function() {
+        this.hide();
+    } // end hit
+
     return tEnemy;
 } // end Enemy
 
@@ -169,4 +183,32 @@ function SpaceBackground(scene) {
             drawCircle(this.context, this.pointXs[i], this.pointYs[i], this.starColors[i], this.starRadii[i])
         }
     }
+}
+
+
+function Shield(owner) {
+    tShield = new Sprite(scene, "images/shield.png", 54, 133/2);
+    tShield.chargeTimer = new Timer();
+    tShield.chargeTime = 3;
+    tShield.owner = owner;
+    
+    tShield.update = function() {
+        this.setPosition(this.owner.x - 10, this.owner.y);
+        this.setImgAngle(this.owner.moveAngle * 180 / Math.PI + 90);
+
+        if (this.visible == false) {
+            if (this.chargeTimer.getElapsedTime() >= this.chargeTime) {
+                this.visible = true;
+            } // end if
+        } // end if
+
+        this.updateSelf();
+    } // end update
+
+    tShield.hit = function() {
+        this.hide();
+        this.chargeTimer.reset();
+    } // end hit
+
+    return tShield;
 }
