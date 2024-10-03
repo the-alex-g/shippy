@@ -13,12 +13,15 @@
             var enemyBullets;
             var enemyTimer = new Timer();
             var bg;
+            var score = 0;
+            var enemyShootSound;
 
             function init() {
                 scene = new Scene();
                 shippy = new Shippy();
                 bg = new SpaceBackground(scene)
                 enemyBullets = new SpriteStack(EnemyBullet, 10);
+                enemyShootSound = new Sound("sfx/laser2.ogg");
 
                 enemies = new SpriteStack(Enemy, 5);
                 enemies.forEach(function(value, index, array) {value.launch();});
@@ -36,12 +39,13 @@
                     function(bullet, index, array) {
                         enemies.forEachVisible(
                             function(enemy, index2, array2) {
-                                if (getDistanceBetween(bullet, enemy) < bullet.width + enemy.width) {
+                                if (getDistanceBetween(bullet, enemy) < (bullet.width + enemy.width) / 2) {
                                     enemy.hit();
                                     if (enemy.visible == false) {
                                         explosion = explosions.getNextHidden();
                                         explosion.setPosition(enemy.x, enemy.y);
                                         explosion.restart();
+                                        score += enemy.type + 1;
                                     } // end if
                                     bullet.hide();
                                 } // end if
@@ -53,7 +57,7 @@
                 // collide enemy bullets with player
                 enemyBullets.forEachVisible(
                     function(bullet, index, array) {
-                        if (getDistanceBetween(bullet, shippy) < bullet.width + shippy.width) {
+                        if (getDistanceBetween(bullet, shippy) < (bullet.width + shippy.width) / 2) {
                             bullet.hide();
                             shippy.hit();
                         } // end if
@@ -70,9 +74,10 @@
                 } // end if
             } // end checkRespawn
 
-            function updateHealth() {
+            function updateLabels() {
                 document.getElementById("playerHealth").innerText = "Health: " + shippy.health;
-            }
+                document.getElementById("score").innerText = "Score: " + score;
+            } // end updateLabels
 
             function update() {
                 scene.clear();
@@ -85,12 +90,13 @@
 
                 collide();
                 checkRespawn();
-                updateHealth();
+                updateLabels();
             } // end update
         </script>
     </head>
     <body onload="init()">
         <div id="playerHealth">Health: 10</div>
+        <div id="score">Score: 0</div>
         <div>Images courtesy of Kenny</div>
     </body>
 </html>

@@ -7,7 +7,8 @@ function Shippy() {
     tShippy.canShoot = true;
     tShippy.bullets = new SpriteStack(Bullet, 10);
     tShippy.shield = new Shield(tShippy);
-    
+    tShippy.shootSound = new Sound("sfx/laser1.ogg");
+
     tShippy.setSpeed(0);
     tShippy.setAngle(0);
 
@@ -36,6 +37,7 @@ function Shippy() {
               bullet = this.bullets.getNextHidden();
               bullet.fire(this);
               this.canShoot = false;
+              this.shootSound.play();
             } // end if
         } else {
             this.canShoot = true;
@@ -152,6 +154,7 @@ function Enemy() {
             bullet = enemyBullets.getNextHidden();
             bullet.fire(this);
             this.shootTimer.reset();
+            enemyShootSound.play();
         } // end if
     } // end shoot
 
