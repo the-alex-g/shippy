@@ -7,7 +7,7 @@ function Shippy() {
     tShippy.canShoot = true;
     tShippy.bullets = new SpriteStack(Bullet, 10);
     tShippy.shield = new Shield(tShippy);
-    tShippy.shootSound = new Sound("sfx/laser1.ogg");
+    tShippy.shootSound = new Sound("sfx/laser1");
 
     tShippy.setSpeed(0);
     tShippy.setAngle(0);

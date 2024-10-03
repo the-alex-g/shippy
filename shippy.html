@@ -21,7 +21,7 @@
                 shippy = new Shippy();
                 bg = new SpaceBackground(scene)
                 enemyBullets = new SpriteStack(EnemyBullet, 10);
-                enemyShootSound = new Sound("sfx/laser2.ogg");
+                enemyShootSound = new Sound("sfx/laser2");
 
                 enemies = new SpriteStack(Enemy, 5);
                 enemies.forEach(function(value, index, array) {value.launch();});
