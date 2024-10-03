@@ -1,3 +1,31 @@
+TYPE_SHIELD = 1;
+TYPE_NORMAL = 0;
+TYPE_ADVANCED = 2;
+TYPE_ELITE = 3;
+TYPE_ATTRIBUTES = {
+    1:{
+        "shield":true,
+        "cooldown":0.5,
+        "speed":5,
+    },
+    0:{
+        "shield":false,
+        "cooldown":0.5,
+        "speed":5,
+    },
+    2:{
+        "shield":false,
+        "cooldown":0.4,
+        "speed":7,
+    },
+    3:{
+        "shield":true,
+        "cooldown":0.4,
+        "speed":7,
+    }
+};
+
+
 function Shippy() {
     tShippy = new Sprite(scene, "images/player.png", 75 / 2, 112 / 2);
     
@@ -100,19 +128,9 @@ function Enemy() {
 
     tEnemy.setType = function(newType) {
         this.type = newType;
-        if (this.type == TYPE_SHIELD) {
-            this.shield.show();
-            this.cooldown = 0.5;
-            this.setSpeed(5);
-        } else if (this.type == TYPE_ADVANCED) {
-            this.shield.hide();
-            this.cooldown = 0.4;
-            this.setSpeed(6);
-        } else {
-            this.shield.hide();
-            this.cooldown = 0.5;
-            this.setSpeed(5);
-        } // end if
+        this.setSpeed(TYPE_ATTRIBUTES[this.type]["speed"]);
+        this.cooldown = TYPE_ATTRIBUTES[this.type]["cooldown"];
+        this.shield.enabled = TYPE_ATTRIBUTES[this.type]["shield"];
 
         this.image.src = "images/enemy" + this.type + ".png";
     }
@@ -122,7 +140,9 @@ function Enemy() {
         this.show();
 
         typeChance = Math.random() * 100;
-        if (typeChance < 20) {
+        if (typeChance < 10) {
+            this.setType(TYPE_ELITE);
+        } else if (typeChance < 20) {
             this.setType(TYPE_SHIELD);
         } else if (typeChance < 30) {
             this.setType(TYPE_ADVANCED);
@@ -165,13 +185,11 @@ function Enemy() {
         } // end if
         this.updateSelf();
 
-        if (this.type == TYPE_SHIELD) {
-            this.shield.update();
-        }
+        this.shield.update();
     } // end update
 
     tEnemy.hit = function() {
-        if (this.type == TYPE_SHIELD) {
+        if (this.shield.enabled) {
             if (this.shield.visible) {
                 this.shield.hit();
             } else {
@@ -236,18 +254,21 @@ function Shield(owner) {
     tShield.chargeTimer = new Timer();
     tShield.chargeTime = 3;
     tShield.owner = owner;
+    tShield.enabled = true;
     
     tShield.update = function() {
-        this.setPosition(this.owner.x - 10, this.owner.y);
-        this.setImgAngle(this.owner.moveAngle * 180 / Math.PI + 90);
-
-        if (this.visible == false) {
-            if (this.chargeTimer.getElapsedTime() >= this.chargeTime) {
-                this.visible = true;
+        if (this.enabled) {
+            this.setPosition(this.owner.x - 10, this.owner.y);
+            this.setImgAngle(this.owner.moveAngle * 180 / Math.PI + 90);
+    
+            if (this.visible == false) {
+                if (this.chargeTimer.getElapsedTime() >= this.chargeTime) {
+                    this.visible = true;
+                } // end if
             } // end if
-        } // end if
-
-        this.updateSelf();
+    
+            this.updateSelf();
+        }
     } // end update
 
     tShield.hit = function() {
@@ -257,8 +278,3 @@ function Shield(owner) {
 
     return tShield;
 }
-
-
-TYPE_SHIELD = 1;
-TYPE_NORMAL = 0;
-TYPE_ADVANCED = 2;
