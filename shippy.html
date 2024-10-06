@@ -2,6 +2,40 @@
     <head>
         <meta charset="UTF-8">
         <title>shippy.html</title>
+        <style type="text/css">
+            @font-face {
+                font-family: "myFont";
+                src: url("/home/apg/Projects/GameEngineClass/JavaScript/shippy/images/bonus/kenvector_future.ttf");
+            }
+            .canvas {
+                margin:auto;
+                width:50%;
+            }
+            .text {
+                z-index: 100;
+                color:aliceblue;
+                background-color: black;
+                position: relative;
+                font-family: "myFont";
+            }
+            #playerHealth {
+                float: left;
+                margin-left: 20px;
+                top:40px;
+                font-size: large;
+            }
+            #score {
+                float: right;
+                margin-right: 30px;
+                top:40px;
+                font-size: large;
+            }
+            #kennyNotice {
+                margin:auto;
+                width:50%;
+                text-align: center;
+            }
+        </style>
         <script type="text/javascript" src="../gameEngine/simpleGame.js"></script>
         <script type="text/javascript" src="../gameEngine/gameExtension.js"></script>
         <script type="text/javascript" src="shippy.js"></script>
@@ -95,8 +129,10 @@
         </script>
     </head>
     <body onload="init()">
-        <div id="playerHealth">Health: 10</div>
-        <div id="score">Score: 0</div>
-        <div>Images courtesy of Kenny</div>
+        <div id="canvas" class="canvas">
+            <div id="playerHealth" class="text">Health: 10</div>
+            <div id="score" class="text">Score: 0</div>
+            <div id="kennyNotice" class="text">Images courtesy of Kenny</div>
+        </div>
     </body>
 </html>
