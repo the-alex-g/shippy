@@ -31,7 +31,7 @@ function Shippy() {
     
     tShippy.maxSpeed = 10;
     tShippy.minSpeed = -3;
-    tShippy.health = 10;
+    tShippy.health = 5;
     tShippy.canShoot = true;
     tShippy.bullets = new SpriteStack(Bullet, 10);
     tShippy.shield = new Shield(tShippy);

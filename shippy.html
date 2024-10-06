@@ -35,6 +35,16 @@
                 width:50%;
                 text-align: center;
             }
+            #playButton {
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: large;
+                color: black;
+                background-color: aliceblue;
+            }
         </style>
         <script type="text/javascript" src="../gameEngine/simpleGame.js"></script>
         <script type="text/javascript" src="../gameEngine/gameExtension.js"></script>
@@ -49,6 +59,7 @@
             var bg;
             var score = 0;
             var enemyShootSound;
+            var gameMode = "start";
 
             function init() {
                 scene = new Scene();
@@ -58,14 +69,32 @@
                 enemyShootSound = new Sound("sfx/laser2");
 
                 enemies = new SpriteStack(Enemy, 5);
-                enemies.forEach(function(value, index, array) {value.launch();});
 
                 explosions = new SpriteStack(Explosion, 6);
-
-                shippy.setPosition(400, 300);
                 scene.setBG("black");
                 scene.start();
             } // end init
+
+
+            function startGame() {
+                gameMode = "play";
+                shippy.health = 5;
+                shippy.setPosition(400, 300);
+                shippy.setSpeed(0);
+                shippy.setAngle(0);
+                toggleButton(false);
+                enemyBullets.hideAll();
+                shippy.bullets.hideAll();
+                enemies.hideAll();
+            } // end startGame
+
+
+            function toggleButton(state) {
+                button = document.getElementById("playButton");
+                button.disabled = ! state;
+                button.hidden = ! state;
+            }
+
             
             function collide() {
                 // collide ship bullets with enemies
@@ -115,23 +144,34 @@
 
             function update() {
                 scene.clear();
-
                 bg.update();
-                enemies.update();
-                enemyBullets.update();
-                shippy.update();
-                explosions.update();
 
-                collide();
-                checkRespawn();
-                updateLabels();
+                if (gameMode == "play") {
+                    enemies.update();
+                    enemyBullets.update();
+                    shippy.update();
+                    explosions.update();
+
+                    collide();
+                    if (shippy.health <= 0) {
+                        gameMode = "pause";
+                        toggleButton(true);
+                    } // end if
+
+                    checkRespawn();
+                    updateLabels();
+                } else if (gameMode == "pause") {
+                    enemies.forEach(function(enemy, b, c) {enemy.draw();});
+                    shippy.draw();
+                } // end if
             } // end update
         </script>
     </head>
     <body onload="init()">
         <div id="canvas" class="canvas">
-            <div id="playerHealth" class="text">Health: 10</div>
+            <div id="playerHealth" class="text">Health: 5</div>
             <div id="score" class="text">Score: 0</div>
+            <button id="playButton" class="button text" onclick="startGame()">Play</button>
             <div id="kennyNotice" class="text">Images courtesy of Kenny</div>
         </div>
     </body>
