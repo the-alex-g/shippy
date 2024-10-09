@@ -18,6 +18,10 @@
                 position: relative;
                 font-family: "myFont";
             }
+            .button {
+                font-family: "myFont";
+                font-size: large;
+            }
             #playerHealth {
                 float: left;
                 margin-left: 20px;
@@ -35,15 +39,13 @@
                 width:50%;
                 text-align: center;
             }
-            #playButton {
+            #HUD {
                 margin: 0;
                 position: absolute;
-                top: 50%;
+                top: 35%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                font-size: large;
-                color: black;
-                background-color: aliceblue;
+                text-align: center;
             }
         </style>
         <script type="text/javascript" src="simpleGame.js"></script>
@@ -61,6 +63,7 @@
             var enemyShootSound;
             var explosionSound;
             var gameMode = "start";
+            var highScore = 0;
 
             function init() {
                 scene = new Scene();
@@ -84,18 +87,19 @@
                 shippy.setPosition(400, 300);
                 shippy.setSpeed(10);
                 shippy.setAngle(0);
-                toggleButton(false);
+                toggleHUD(false);
                 enemyBullets.hideAll();
                 shippy.bullets.hideAll();
                 enemies.hideAll();
+                score = 0;
             } // end startGame
 
 
-            function toggleButton(state) {
-                button = document.getElementById("playButton");
+            function toggleHUD(state) {
+                button = document.getElementById("HUD");
                 button.disabled = ! state;
                 button.hidden = ! state;
-            }
+            } // end toggleHUD
 
             
             function collide() {
@@ -156,7 +160,11 @@
                     collide();
                     if (shippy.health <= 0) {
                         gameMode = "pause";
-                        toggleButton(true);
+                        if (score > highScore) {
+                            highScore = score;
+                        }
+                        document.getElementById("highScore").innerText = "High Score: " + highScore;
+                        toggleHUD(true);
                     } // end if
 
                     checkRespawn();
@@ -172,7 +180,10 @@
         <div id="canvas" class="canvas">
             <div id="playerHealth" class="text">Health: 5</div>
             <div id="score" class="text">Score: 0</div>
-            <button id="playButton" class="button text" onclick="startGame()">Play</button>
+            <div id="HUD" class="text">
+                <p id="highScore">High Score: 0</p>
+                <button class="button" onclick="startGame()">Play</button>
+            </div>
             <div id="kennyNotice" class="text">Images courtesy of Kenny</div>
         </div>
     </body>

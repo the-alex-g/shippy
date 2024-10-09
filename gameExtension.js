@@ -151,7 +151,6 @@ function Particles(scene, count, color) {
         this.points.forEach(
             function(particle, index, array) {
                 if (particle.visible) {
-                    console.log(particle.getColor());
                     drawCircle(context, particle.x, particle.y, particle.getColor(), radius);
                 } // end if
             } // end function
