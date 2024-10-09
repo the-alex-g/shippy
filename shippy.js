@@ -29,35 +29,22 @@ TYPE_ATTRIBUTES = {
 function Shippy() {
     tShippy = new Sprite(scene, "images/player.png", 75 / 2, 112 / 2);
     
-    tShippy.maxSpeed = 10;
-    tShippy.minSpeed = -3;
     tShippy.health = 5;
     tShippy.canShoot = true;
     tShippy.bullets = new SpriteStack(Bullet, 10);
     tShippy.shield = new Shield(tShippy);
     tShippy.shootSound = new Sound("sfx/laser1");
+    tShippy.turnSpeed = 6;
 
-    tShippy.setSpeed(0);
+    tShippy.setSpeed(10);
     tShippy.setAngle(0);
 
     tShippy.checkKeys = function(){
         if (keysDown[K_LEFT] || keysDown[K_A]){
-            this.changeAngleBy(-5);
+            this.changeAngleBy(-this.turnSpeed);
         } // end if
         if (keysDown[K_RIGHT] || keysDown[K_D]){
-            this.changeAngleBy(5);
-        } // end if
-        if (keysDown[K_UP] || keysDown[K_W]){
-            this.changeSpeedBy(1);
-            if (this.speed > this.maxSpeed){
-                this.setSpeed(this.maxSpeed);
-            } // end if
-        } // end if
-        if (keysDown[K_DOWN] || keysDown[K_S]){
-            this.changeSpeedBy(-1);
-            if (this.speed < this.minSpeed){
-                this.setSpeed(this.minSpeed);
-            } // end if
+            this.changeAngleBy(this.turnSpeed);
         } // end if
 
         if (keysDown[K_SPACE]) {
@@ -205,7 +192,8 @@ function Enemy() {
 
 
 function Explosion() {
-    tExplosion = new Particles(scene, 20, 'red');
+    tExplosion = new Particles(scene, 20, new RGBColor(255, 255, 0));
+    tExplosion.fadeColor = new RGBColor(255, 0, 0);
     tExplosion.setContinuous(false);
     return tExplosion;
 } // end Explosion
