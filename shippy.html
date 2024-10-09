@@ -59,6 +59,7 @@
             var bg;
             var score = 0;
             var enemyShootSound;
+            var explosionSound;
             var gameMode = "start";
 
             function init() {
@@ -67,6 +68,7 @@
                 bg = new SpaceBackground(scene)
                 enemyBullets = new SpriteStack(EnemyBullet, 10);
                 enemyShootSound = new Sound("sfx/laser2");
+                explosionSound = new Sound("sfx/explosion");
 
                 enemies = new SpriteStack(Enemy, 5);
 
@@ -105,9 +107,8 @@
                                 if (getDistanceBetween(bullet, enemy) < (bullet.width + enemy.width) / 2) {
                                     enemy.hit();
                                     if (enemy.visible == false) {
-                                        explosion = explosions.getNextHidden();
-                                        explosion.setPosition(enemy.x, enemy.y);
-                                        explosion.restart();
+                                        explosions.getNextHidden().explodeAt(enemy.x, enemy.y);
+                                        explosionSound.play();
                                         score += enemy.type + 1;
                                     } // end if
                                     bullet.hide();

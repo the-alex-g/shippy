@@ -34,7 +34,10 @@ function Shippy() {
     tShippy.bullets = new SpriteStack(Bullet, 10);
     tShippy.shield = new Shield(tShippy);
     tShippy.shootSound = new Sound("sfx/laser1");
+    tShippy.hitSound = new Sound("sfx/damage");
     tShippy.turnSpeed = 6;
+
+    tShippy.shield.setSoundEnabled(new Sound("sfx/shieldDown"), new Sound("sfx/shieldUp"));
 
     tShippy.setSpeed(10);
     tShippy.setAngle(0);
@@ -71,6 +74,7 @@ function Shippy() {
             this.shield.hit();
         } else {
             this.health -= 1;
+            this.hitSound.play();
         } // end if
     } // end hit
 
@@ -195,6 +199,11 @@ function Explosion() {
     tExplosion = new Particles(scene, 20, new RGBColor(255, 255, 0));
     tExplosion.fadeColor = new RGBColor(255, 0, 0);
     tExplosion.setContinuous(false);
+
+    tExplosion.explodeAt = function(x, y) {
+        this.setPosition(x, y);
+        this.restart();
+    }
     return tExplosion;
 } // end Explosion
 
@@ -243,6 +252,13 @@ function Shield(owner) {
     tShield.chargeTime = 3;
     tShield.owner = owner;
     tShield.enabled = true;
+    tShield.soundEnabled = false;
+
+    tShield.setSoundEnabled = function(down, up) {
+        this.soundEnabled = true;
+        this.soundDown = down;
+        this.soundUp = up;
+    }
     
     tShield.update = function() {
         if (this.enabled) {
@@ -252,16 +268,22 @@ function Shield(owner) {
             if (this.visible == false) {
                 if (this.chargeTimer.getElapsedTime() >= this.chargeTime) {
                     this.visible = true;
+                    if (this.soundEnabled) {
+                        this.soundUp.play();
+                    } // end if
                 } // end if
             } // end if
     
             this.updateSelf();
-        }
+        } // end if
     } // end update
 
     tShield.hit = function() {
         this.hide();
         this.chargeTimer.reset();
+        if (this.soundEnabled) {
+            this.soundDown.play();
+        } // end if
     } // end hit
 
     return tShield;
