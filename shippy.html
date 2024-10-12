@@ -52,19 +52,23 @@
         <script type="text/javascript" src="gameExtension.js"></script>
         <script type="text/javascript" src="shippy.js"></script>
         <script type="text/javascript">
+            // initialize variables
             var scene;
             var shippy;
             var enemies;
             var explosions;
             var enemyBullets;
-            var enemyTimer = new Timer();
             var bg;
-            var score = 0;
             var enemyShootSound;
             var explosionSound;
-            var gameMode = "start";
-            var highScore = 0;
 
+            var gameMode = "start";
+            var score = 0;
+            var highScore = 0;
+            // for scheduling enemy respawns
+            var enemyTimer = new Timer();
+
+            // initialize global variables
             function init() {
                 scene = new Scene();
                 shippy = new Shippy();
@@ -80,41 +84,57 @@
                 scene.start();
             } // end init
 
-
+            // reset the game
             function startGame() {
                 gameMode = "play";
+                // reset shippy
                 shippy.health = 5;
                 shippy.setPosition(400, 300);
                 shippy.setSpeed(10);
                 shippy.setAngle(0);
+
+                // turn the HUD off
                 toggleHUD(false);
+
+                // reset bullets
                 enemyBullets.hideAll();
                 shippy.bullets.hideAll();
+
+                // reset enemies and restart spawn timer
                 enemies.hideAll();
+                enemyTimer.reset();
+
+                // reset score
                 score = 0;
             } // end startGame
 
 
+            // show or hide the HUD
+            // if state is true, show; otherwise, hide
             function toggleHUD(state) {
-                button = document.getElementById("HUD");
-                button.disabled = ! state;
-                button.hidden = ! state;
+                hud = document.getElementById("HUD");
+                hud.hidden = ! state;
             } // end toggleHUD
 
             
             function collide() {
                 // collide ship bullets with enemies
-                shippy.bullets.forEachVisible(
+                shippy.bullets.forEachVisible( // for each visible ship bullet
                     function(bullet, index, array) {
-                        enemies.forEachVisible(
+                        enemies.forEachVisible( // for each visible enemy
                             function(enemy, index2, array2) {
-                                if (getDistanceBetween(bullet, enemy) < (bullet.width + enemy.width) / 2) {
+                                // if we have a collision
+                                if (areColliding(bullet, enemy)) {
                                     enemy.hit();
+                                    // if the enemy died
                                     if (enemy.visible == false) {
+                                        // make an explosion
                                         explosions.getNextHidden().explodeAt(enemy.x, enemy.y);
                                         explosionSound.play();
+                                        // add to score
                                         score += enemy.type + 1;
                                     } // end if
+                                    // hide the bullet
                                     bullet.hide();
                                 } // end if
                             } // end function
@@ -123,53 +143,74 @@
                 );
 
                 // collide enemy bullets with player
-                enemyBullets.forEachVisible(
+                enemyBullets.forEachVisible( // for each visible enemy bullet
                     function(bullet, index, array) {
-                        if (getDistanceBetween(bullet, shippy) < (bullet.width + shippy.width) / 2) {
+                        // if colliding with shippy
+                        if (areColliding(shippy, bullet)) {
+                            // hide the bullet
                             bullet.hide();
+                            // damage the shippy
                             shippy.hit();
                         } // end if
                     } // end function
                 );
             } // end collide
 
+            // respawn enemies if necessary
             function checkRespawn() {
+                // calculate when enemies respawn
+                // the fewer enemies there are, the faster they respawn
                 currentEnemies = enemies.getVisibleCount();
                 timeUntilRespawn = 5 / (enemies.count + 1 - currentEnemies);
+                // if we're due for a respawn and there are enemies not yet spawned
                 if (enemyTimer.getElapsedTime() >= timeUntilRespawn && currentEnemies < enemies.count) {
+                    // launch the next hidden enemy
                     enemies.getNextHidden().launch();
+                    // reset the spawn timer
                     enemyTimer.reset();
                 } // end if
             } // end checkRespawn
 
+            // update health and score labels
             function updateLabels() {
                 document.getElementById("playerHealth").innerText = "Health: " + shippy.health;
                 document.getElementById("score").innerText = "Score: " + score;
             } // end updateLabels
 
+            // run the game
             function update() {
                 scene.clear();
                 bg.update();
 
+                // if we're playing
                 if (gameMode == "play") {
+                    // update everything
                     enemies.update();
                     enemyBullets.update();
                     shippy.update();
                     explosions.update();
-
+                    // collisions
                     collide();
+                    // respawn enemies
+                    checkRespawn();
+                    // update health and score labels
+                    updateLabels();
+                    // if shippy's dead
                     if (shippy.health <= 0) {
+                        // set mode to pause
                         gameMode = "pause";
+                        // update high score
                         if (score > highScore) {
                             highScore = score;
                         }
+                        // update high score label
                         document.getElementById("highScore").innerText = "High Score: " + highScore;
+                        // show HUD
                         toggleHUD(true);
                     } // end if
-
-                    checkRespawn();
-                    updateLabels();
+                // if the game is not being played
                 } else if (gameMode == "pause") {
+                    // draw enemies and player, but that's it
                     enemies.forEach(function(enemy, b, c) {enemy.draw();});
                     shippy.draw();
                 } // end if

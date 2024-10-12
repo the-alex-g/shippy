@@ -101,7 +101,8 @@ function Sprite(scene, imageFile, width, height){
   this.update = function() {
     this.updateSelf();
   } // end update
-
+  
+  // EDIT: this was formerly the update function
   this.updateSelf = function(){
     this.x += this.dx;
     this.y += this.dy;
@@ -469,8 +470,11 @@ function Scene(){
     this.touchable = 'createTouch' in document;
     
     //dynamically create a canvas element
+    // EDIT: the canvas goes inside a div with id "canvas"
+    // if such an element already exists, the canvas goes inside of that
     canvasDiv = document.getElementById("canvas");
-    if (canvasDiv == null) {
+    if (canvasDiv == null) { // if there was no element with id "canvas"
+      // create a div with id and class "canvas"
       canvasDiv = document.createElement("div");
       canvasDiv.className = "canvas";
       canvasDiv.id = "canvas";
@@ -606,27 +610,35 @@ function Scene(){
 function Sound(src, formats){
   //sound effect class
   //builds a sound effect based on a url
-  //uses all sound files with name src and the extensions in formats 
+  //uses all sound files with name src and the extensions in formats
+  // EDIT: automatically loads all sounds with given base name
 
+  // array of sounds
   this.snds = [];
 
+  // set default sound formats
   if (formats === undefined) {
     formats = [".ogg", ".wav"];
   } // end if
 
+  // for each format, create a sound element
   for (let i = 0; i < formats.length; i++) {
-    this.snds.push(document.createElement("audio"));
-    this.snds[i].src = src + formats[i];
+    sound = document.createElement("audio");
+    // load the sound file with path src and extension formats[i]
+    sound.src = src + formats[i];
     //preload sounds if possible (won't work on IOS)
-    this.snds[i].setAttribute("preload", "auto");
+    sound.setAttribute("preload", "auto");
     //hide controls for now
-    this.snds[i].setAttribute("controls", "none");
-    this.snds[i].style.display = "none";
+    sound.setAttribute("controls", "none");
+    sound.style.display = "none";
     //attach to document so controls will show when needed
-    document.body.appendChild(this.snds[i]);
+    document.body.appendChild(sound);
+    // and to sound array
+    this.snds.push(sound);
   } // end for
 
   this.play = function(){
+    // play each sound in the array
     for (let i = 0; i < this.snds.length; i++) {
       this.snds[i].play();
     } // end for
