@@ -2,6 +2,8 @@
 A space shooter game. Use A/left arrow and D/right arrow to steer, and space to shoot.
 Kill as many enemies as you can before you get shot down yourself!
 
+Play the game [here.](https://the-alex-g.itch.io/shippy)
+
 ### 3rd-Party Assets
 The following files came from Kenny's Space Shooter pack:
 
