@@ -110,6 +110,8 @@ function Particles(scene, count, color) {
     this.color = color;
     // color to transition to
     this.fadeColor = color;
+    // timer to control the particle's lifetimes
+    this.timer = new Timer();
     // particle class
     this.Particle = function(parent) {
         // particle position (relative to parent)
@@ -121,7 +123,11 @@ function Particles(scene, count, color) {
         this.lifetime = 1;
         this.visible = false;
         // used to track lifetime
-        this.timer = new Timer();
+        this.lifetimeOffset = 0.0;
+        
+        this.getLifetime = function() {
+            return parent.timer.getElapsedTime() - this.lifetimeOffset;
+        }
 
         // put the particle at the origin and randomize its direction of travel
         this.restart = function() {
@@ -130,8 +136,8 @@ function Particles(scene, count, color) {
             this.y = 0;
             // randomize direction
             this.direction = Math.PI * 2 * Math.random();
-            // reset lifetime
-            this.timer.reset();
+            // reset and randomize lifetime
+            this.lifetimeOffset = parent.timer.getElapsedTime();
             this.lifetime = Math.max(parent.lifetime / 2, Math.random() * parent.lifetime);
             // make visible
             this.visible = true;
@@ -139,7 +145,7 @@ function Particles(scene, count, color) {
 
         // move the particle and check for lifetime expiration
         this.update = function() {
-            if (this.timer.getElapsedTime() < this.lifetime) {
+            if (this.getLifetime() < this.lifetime) {
                 // if the particle hasn't expired yet
                 this.x += Math.cos(this.direction) * parent.speed;
                 this.y += Math.sin(this.direction) * parent.speed;
@@ -154,7 +160,7 @@ function Particles(scene, count, color) {
 
         // return an hex color somewhere between parent.color and parent.fadeColor
         this.getColor = function() {
-            return lerpColor(parent.color, parent.fadeColor, this.timer.getElapsedTime() / this.lifetime).getHex();
+            return lerpColor(parent.color, parent.fadeColor, this.getLifetime() / this.lifetime).getHex();
         } // end getColor
     } // end Particle
 
