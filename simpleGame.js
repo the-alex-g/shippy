@@ -270,8 +270,6 @@ function Sprite(scene, imageFile, width, height){
   } // end changeSpeedBy
 
   this.setImgAngle = function(degrees){
-     //offset degrees by 90
-     degrees = degrees - 90;
     //convert degrees to radians
     this.imgAngle = degrees * Math.PI / 180;
   } // end setImgAngle
@@ -279,8 +277,7 @@ function Sprite(scene, imageFile, width, height){
   this.getImgAngle = function(){
     //imgAngle is stored in radians.
     //return it in degrees
-    //don't forget we offset the angle by 90 degrees
-    return (this.imgAngle * 180 / Math.PI) + 90;
+    return (this.imgAngle * 180 / Math.PI);
   }
 
   this.changeImgAngleBy = function(degrees){
@@ -290,8 +287,6 @@ function Sprite(scene, imageFile, width, height){
 
   this.setMoveAngle = function(degrees){
     //take movement angle in degrees
-    // offset degrees by 90
-    degrees = degrees - 90
     //convert to radians
     this.moveAngle = degrees * Math.PI / 180;
     this.calcVector();
@@ -308,8 +303,7 @@ function Sprite(scene, imageFile, width, height){
   this.getMoveAngle = function(){
     //moveAngle is stored in radians.
     //return it in degrees
-    //don't forget we offset the angle by 90 degrees
-    return (this.moveAngle * 180 / Math.PI) + 90;    
+    return (this.moveAngle * 180 / Math.PI);    
   }
 
     //convenience functions combine move and img angles
@@ -331,8 +325,6 @@ function Sprite(scene, imageFile, width, height){
   this.addVector = function(degrees, thrust){
     //Modify the current motion vector by adding a new vector to it.
 
-    //offset angle by 90 degrees
-    degrees -= 90;
     //input angle is in degrees - convert to radians    
     angle = degrees * Math.PI / 180;
     
@@ -400,8 +392,6 @@ function Sprite(scene, imageFile, width, height){
       diffY = myY - otherY;
       radians = Math.atan2(diffY, diffX);
       degrees = radians * 180 / Math.PI;
-      //degrees are offset
-      degrees += 90;
       return degrees;
   } // end angleTo
   

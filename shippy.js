@@ -107,7 +107,7 @@ function Bullet() {
     // shoot the bullet from parent
     tBullet.fire = function(parent) {
         // set angle to parent's forward direction
-        this.setAngle(parent.moveAngle * 180 / Math.PI + 90);
+        this.setAngle(parent.getMoveAngle());
         // set position to parent's position
         this.setPosition(parent.x, parent.y);
         // set speed and make visible
@@ -134,7 +134,6 @@ function EnemyBullet() {
 // enemy class
 function Enemy() {
     tEnemy = new Sprite(scene, "images/enemy0.png", 84/2, 93/2);
-    tEnemy.setImgAngle(90);
     // this variable stores the direction the ship is turning in
     tEnemy.turnDirection = 0;
     tEnemy.target = shippy;
@@ -179,7 +178,7 @@ function Enemy() {
     // chase the target
     tEnemy.chase = function() {
         // get angle to target
-        angle = getAngleBetween(this, this.target) - this.moveAngle * 180 / Math.PI - 90;
+        angle = getAngleBetween(this, this.target) - this.getMoveAngle() - 90;
         angle %= 360;
 
         // if the enemy is not facing the target
@@ -335,7 +334,7 @@ function Shield(owner) {
         if (this.enabled) { // if it's enabled
             // set position and angle to match owner
             this.setPosition(this.owner.x - 10, this.owner.y);
-            this.setImgAngle(this.owner.moveAngle * 180 / Math.PI + 90);
+            this.setImgAngle(this.owner.getMoveAngle());
             
             // if it's not visible
             if (this.visible == false) {
