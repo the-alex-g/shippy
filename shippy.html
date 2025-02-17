@@ -43,9 +43,14 @@
             function startGame() {
                 gameMode = "play";
                 // reset shippy
-                shippy.health = 5;
+                if (shippy.moveMode == "easy") {
+                    shippy.setSpeed(200);
+                    shippy.health = 5;
+                } else {
+                    shippy.setSpeed(0.0);
+                    shippy.health = 7; // ??
+                }
                 shippy.setPosition(400, 300);
-                shippy.setSpeed(200);
                 shippy.setAngle(0);
 
                 // turn the HUD off
@@ -170,14 +175,24 @@
                     shippy.draw();
                 } // end if
             } // end update
+
+            function toggleMoveMode() {
+                if (shippy.moveMode == "easy") {
+                    shippy.moveMode = "hard";
+                } else {
+                    shippy.moveMode = "easy";
+                } // end if
+                document.getElementById("modeButton").innerText = "Mode: " + shippy.moveMode;
+            } // end toggleMoveMode
         </script>
     </head>
     <body onload="init()">
         <div id="canvas" class="canvas">
-            <div id="playerHealth" class="text">Health: 5</div>
+            <div id="playerHealth" class="text">Health: 0</div>
             <div id="score" class="text">Score: 0</div>
             <div id="HUD" class="text">
                 <p id="highScore">High Score: 0</p>
+                <button class="button" onclick="toggleMoveMode()" id="modeButton">Mode: Easy</button>
                 <button class="button" onclick="startGame()">Play</button>
             </div>
             <div id="kennyNotice" class="text">Images courtesy of Kenny</div>

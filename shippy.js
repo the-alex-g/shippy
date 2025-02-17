@@ -37,7 +37,7 @@ function Shippy() {
     tShippy = new Sprite(scene, "images/player.png", 75 / 2, 112 / 2);
     
     tShippy.health = 5;
-    tShippy.turnSpeed = 6;
+    tShippy.turnSpeed = 0.6;
     tShippy.canShoot = true;
     // initialize bullets
     tShippy.bullets = new SpriteStack(Bullet, 10);
@@ -52,19 +52,29 @@ function Shippy() {
     tShippy.shield.enableSound(new Sound("sfx/shieldDown"), new Sound("sfx/shieldUp"));
 
     // set speed and angle
-    tShippy.setSpeed(200);
     tShippy.setAngle(0);
+    tShippy.moveMode = "easy";
 
     // check for keyboard input
     tShippy.checkKeys = function(){
         // turn left
+        turnAmount = this.turnSpeed * 360 * delta;
+        realTurn = 0.0;
         if (keysDown[K_LEFT] || keysDown[K_A]){
-            this.changeAngleBy(-this.turnSpeed);
+            realTurn = -turnAmount;
+        } else if (keysDown[K_RIGHT] || keysDown[K_D]){
+            realTurn = turnAmount;
         } // end if
-        // turn right
-        if (keysDown[K_RIGHT] || keysDown[K_D]){
-            this.changeAngleBy(this.turnSpeed);
-        } // end if
+        if (this.moveMode == "hard") {
+            this.imgAngle += realTurn * Math.PI / 180;
+            if ((keysDown[K_UP] || keysDown[K_W]) && this.speed <= 300.0){
+                this.addVector(this.getImgAngle(), 300 * delta);
+            } else {
+                this.addVector(this.getMoveAngle() + 180, this.speed * delta);
+            }
+        } else {
+            this.turnBy(realTurn);
+        }
 
         // shoot
         if (keysDown[K_SPACE]) {
@@ -113,7 +123,7 @@ function Bullet() {
     // shoot the bullet from parent
     tBullet.fire = function(parent) {
         // set angle to parent's forward direction
-        this.setAngle(parent.getMoveAngle());
+        this.setAngle(parent.getImgAngle());
         // set position to parent's position
         this.setPosition(parent.x, parent.y);
         // set speed and make visible
@@ -342,7 +352,7 @@ function Shield(owner) {
         if (this.enabled) { // if it's enabled
             // set position and angle to match owner
             this.setPosition(this.owner.x, this.owner.y);
-            this.setImgAngle(this.owner.getMoveAngle());
+            this.setImgAngle(this.owner.getImgAngle());
             
             // if it's not visible
             if (this.visible == false) {
