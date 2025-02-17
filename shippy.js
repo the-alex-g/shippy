@@ -7,22 +7,22 @@ TYPE_ATTRIBUTES = {
     1:{
         "shield":true,
         "cooldown":0.5,
-        "speed":5,
+        "speed":100,
     },
     0:{
         "shield":false,
         "cooldown":0.5,
-        "speed":5,
+        "speed":100,
     },
     2:{
         "shield":false,
         "cooldown":0.4,
-        "speed":7,
+        "speed":150,
     },
     3:{
         "shield":true,
         "cooldown":0.4,
-        "speed":7,
+        "speed":150,
     }
 };
 
@@ -46,7 +46,7 @@ function Shippy() {
     tShippy.shield.enableSound(new Sound("sfx/shieldDown"), new Sound("sfx/shieldUp"));
 
     // set speed and angle
-    tShippy.setSpeed(10);
+    tShippy.setSpeed(200);
     tShippy.setAngle(0);
 
     // check for keyboard input
@@ -111,7 +111,7 @@ function Bullet() {
         // set position to parent's position
         this.setPosition(parent.x, parent.y);
         // set speed and make visible
-        this.setSpeed(20);
+        this.setSpeed(400);
         this.show();
     } // end fire
 
@@ -193,7 +193,7 @@ function Enemy() {
             } // end if
 
             // turn the enemy
-            this.changeAngleBy(this.speed * this.turnDirection);
+            this.changeAngleBy(this.speed * this.turnDirection * delta);
         } else { // if the enemy is facing the target
             // stop turning
             this.turnDirection = 0;
@@ -333,7 +333,7 @@ function Shield(owner) {
     tShield.update = function() {
         if (this.enabled) { // if it's enabled
             // set position and angle to match owner
-            this.setPosition(this.owner.x - 10, this.owner.y);
+            this.setPosition(this.owner.x, this.owner.y);
             this.setImgAngle(this.owner.getMoveAngle());
             
             // if it's not visible

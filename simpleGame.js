@@ -29,11 +29,11 @@ function Sprite(scene, imageFile, width, height){
   this.cWidth = parseInt(this.canvas.width);
   this.x = 200;
   this.y = 200;
-  this.dx = 10;
+  this.dx = 0;
   this.dy = 0;
   this.imgAngle = 0;
   this.moveAngle = 0;
-  this.speed = 10;
+  this.speed = 0;
   this.camera = false;
   this.visible = true;
   this.boundAction = WRAP;
@@ -104,8 +104,8 @@ function Sprite(scene, imageFile, width, height){
   
   // EDIT: this was formerly the update function
   this.updateSelf = function(){
-    this.x += this.dx;
-    this.y += this.dy;
+    this.x += this.dx * delta;
+    this.y += this.dy * delta;
     this.checkBounds();
     if (this.visible){
       this.draw();
