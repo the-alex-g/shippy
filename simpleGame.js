@@ -474,7 +474,7 @@ function Scene(){
     canvasDiv.appendChild(this.canvas);
     document.body.appendChild(canvasDiv);
     this.context = this.canvas.getContext("2d");
-    
+
     this.clear = function(){
       this.context.clearRect(0, 0, this.width, this.height);
     }
@@ -484,22 +484,22 @@ function Scene(){
       // removed this test as it was breaking on machines with both
       // touch and keyboard input
       //if (!this.touchable){
-	this.initKeys();
-	document.onkeydown = this.updateKeys;
-	document.onkeyup = this.clearKeys;
+	    this.initKeys();
+	    document.onkeydown = this.updateKeys;
+	    document.onkeyup = this.clearKeys;
       //} // end if
       this.intID = setInterval(localUpdate, 50);
       document.onmousemove = this.updateMousePos;
       document.mouseClicked = false;
       document.onmousedown = function(){
-	this.mouseDown = true;
-	this.mouseClicked = true;
-      }
+	      this.mouseDown = true;
+	      this.mouseClicked = true;
+      } // end lambda function
       document.onmouseup = function(){
-	this.mouseDown = false;
-	this.mouseClicked  = false;
-      }
-    } 
+	      this.mouseDown = false;
+	      this.mouseClicked  = false;
+      } // end lambda function
+    } // end start
 
     this.stop = function(){
       clearInterval(this.intID);
@@ -867,7 +867,14 @@ var AnimTimer = function()
 }
 
 
+var gameTimer = new Timer();
+var delta = 0.0;
+var gameDuration = 0.0;
+
+
 function localUpdate(){
+    delta = gameTimer.getElapsedTime() - gameDuration;
+    gameDuration = gameTimer.getElapsedTime();
     //will be called once per frame
     //calls the update function defined by
     //the user
