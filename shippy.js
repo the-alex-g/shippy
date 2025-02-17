@@ -3,6 +3,7 @@ TYPE_SHIELD = 1;
 TYPE_NORMAL = 0;
 TYPE_ADVANCED = 2;
 TYPE_ELITE = 3;
+TYPE_OTHER = 4;
 TYPE_ATTRIBUTES = {
     1:{
         "shield":true,
@@ -23,6 +24,11 @@ TYPE_ATTRIBUTES = {
         "shield":true,
         "cooldown":0.4,
         "speed":150,
+    },
+    4:{
+        "shield":false,
+        "cooldown":0.3,
+        "speed":90
     }
 };
 
@@ -170,6 +176,8 @@ function Enemy() {
             this.setType(TYPE_SHIELD);
         } else if (typeChance < 30) {
             this.setType(TYPE_ADVANCED);
+        } else if (typeChance < 40) {
+            this.setType(TYPE_OTHER);
         } else {
             this.setType(TYPE_NORMAL);
         } // end if
