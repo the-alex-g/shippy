@@ -2,33 +2,38 @@
 TYPE_SHIELD = 1;
 TYPE_NORMAL = 0;
 TYPE_ADVANCED = 2;
-TYPE_ELITE = 3;
-TYPE_OTHER = 4;
+TYPE_ELITE = 4;
+TYPE_MISSILE = 3;
 TYPE_ATTRIBUTES = {
     1:{
         "shield":true,
         "cooldown":0.5,
         "speed":100,
+        "missile":false,
     },
     0:{
         "shield":false,
         "cooldown":0.5,
         "speed":100,
+        "missile":false,
     },
     2:{
         "shield":false,
         "cooldown":0.4,
         "speed":150,
+        "missile":false,
     },
-    3:{
+    4:{
         "shield":true,
         "cooldown":0.4,
         "speed":150,
+        "missile":false,
     },
-    4:{
+    3:{
         "shield":false,
-        "cooldown":0.3,
-        "speed":90
+        "cooldown":0.5,
+        "speed":100,
+        "missile":true,
     }
 };
 
@@ -118,8 +123,8 @@ function Shippy() {
     } // end update
 
     // damage the shippy
-    tShippy.hit = function() {
-        if (this.shield.visible) { // take out the shield if it's there
+    tShippy.hit = function(missile) {
+        if (this.shield.visible && missile == false) { // take out the shield if it's there
             this.shield.hit();
         } else { // otherwise, lose a health
             this.health -= 1;
@@ -165,9 +170,16 @@ function Bullet() {
     tBullet = new Sprite(scene, "images/laserBlue09.png", 10, 10);
     
     tBullet.setBoundAction(DIE);
+    tBullet.laserImage = "images/laserBlue09.png"
+    tBullet.missile = false;
 
     // shoot the bullet from parent
     tBullet.fire = function(parent) {
+        if (this.missile) {
+            this.image.src = "images/missile.png";
+        } else {
+            this.image.src = this.laserImage;
+        } // end if
         // set angle to parent's forward direction
         this.setAngle(parent.getImgAngle());
         // set position to parent's position
@@ -185,7 +197,7 @@ function Bullet() {
 function EnemyBullet() {
     tBullet = new Bullet();
     // change the image
-    tBullet.image.src = "images/greenLaser.png";
+    tBullet.laserImage = "images/greenLaser.png";
     tBullet.width = 12;
     tBullet.height = 5;
 
@@ -206,6 +218,7 @@ function Enemy() {
     tEnemy.shield = new Shield(tEnemy);
     // attack cooldown time
     tEnemy.cooldown = 0.5;
+    tEnemy.missile = false;
 
     // set the enemy's type
     tEnemy.setType = function(newType) {
@@ -216,6 +229,7 @@ function Enemy() {
         this.shield.enabled = TYPE_ATTRIBUTES[this.type]["shield"];
         // update image
         this.image.src = "images/enemy" + this.type + ".png";
+        this.missile = TYPE_ATTRIBUTES[this.type]["missile"];
     }
 
     // launch the enemy (like a restart)
@@ -233,7 +247,7 @@ function Enemy() {
         } else if (typeChance < 30) {
             this.setType(TYPE_ADVANCED);
         } else if (typeChance < 40) {
-            this.setType(TYPE_OTHER);
+            this.setType(TYPE_MISSILE);
         } else {
             this.setType(TYPE_NORMAL);
         } // end if
@@ -269,7 +283,9 @@ function Enemy() {
         // if cooldown time has elapsed
         if (this.shootTimer.getElapsedTime() >= this.cooldown) {
             // shoot a bullet
-            enemyBullets.getNextHidden().fire(this);
+            bullet = enemyBullets.getNextHidden();
+            bullet.missile = this.missile;
+            bullet.fire(this);
             // reset the cooldown timer
             this.shootTimer.reset();
             // play the sound
@@ -294,9 +310,9 @@ function Enemy() {
     } // end update
 
     // damage the enemy
-    tEnemy.hit = function() {
+    tEnemy.hit = function(missile) {
         if (this.shield.enabled) { // if we have a shield
-            if (this.shield.visible) { // if it's on
+            if (this.shield.visible && missile == false) { // if it's on
                 this.shield.hit(); // hit the shield
             } else { // the shield is down
                 this.hide(); // die

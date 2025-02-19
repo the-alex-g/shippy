@@ -43,8 +43,8 @@
                 asteroids.showAll();
             } // end init
 
-            function hitEnemy(enemy, scoring) {
-                enemy.hit();
+            function hitEnemy(enemy, missile, scoring) {
+                enemy.hit(missile);
                 // if the enemy died
                 if (enemy.visible == false) {
                     // make an explosion
@@ -102,7 +102,7 @@
                 asteroids.forEach(
                     function(asteroid, i, a) {
                         if (areColliding(shippy, asteroid)) {
-                            shippy.hit();
+                            shippy.hit(false);
                             asteroid.collideWith(shippy, 50);
                         } // end if
                     } // end function
@@ -114,7 +114,7 @@
                         asteroids.forEach(
                             function(asteroid, i, a) {
                                 if (areColliding(enemy, asteroid)) {
-                                    hitEnemy(enemy, false);
+                                    hitEnemy(enemy, false, false);
                                     asteroid.collideWith(enemy, 50);
                                 } // end if
                             } // end function
@@ -138,7 +138,7 @@
                                 function(enemy, index2, array2) {
                                     // if we have a collision
                                     if (areColliding(bullet, enemy)) {
-                                        hitEnemy(enemy, true);
+                                        hitEnemy(enemy, bullet.missile, true);
                                         // hide the bullet
                                         bullet.hide();
                                     } // end if
@@ -163,7 +163,7 @@
                             // hide the bullet
                             bullet.hide();
                             // damage the shippy
-                            shippy.hit();
+                            shippy.hit(bullet.missile);
                         } // end if
                     } // end function
                 );
