@@ -294,7 +294,7 @@ function RGBColor(r, g, b) {
 function getAngleBetween(from, to) {
   dx = to.x - from.x;
   dy = to.y - from.y;
-  return Math.atan2(dy, dx) * 180 / Math.PI + 90;
+  return Math.atan2(dy, dx) * 180 / Math.PI;
 } // end getAngleBetween
 
 

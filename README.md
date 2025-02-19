@@ -26,3 +26,4 @@ The following files came from Kenny's Space Shooter pack:
 * shieldDown.wav
 * shieldUp.ogg
 * shieldUp.wav
+* all the asteroid PNGs in the images/asteroids/ folder

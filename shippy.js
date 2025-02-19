@@ -74,6 +74,8 @@ function Shippy() {
             }
         } else {
             this.turnBy(realTurn);
+            // important for bouncing off of asteroids
+            this.imgAngle = this.moveAngle;
         }
 
         // shoot
@@ -113,6 +115,36 @@ function Shippy() {
 
     return tShippy;
 } // end Shippy
+
+
+function Asteroid() {
+    tAsteroid = new Sprite(scene, "images/asteroids/asteroid0.png", 50, 50);
+
+    tAsteroid.reset = function() {
+        this.setPosition(Math.random() * 400, Math.random() * 300);
+        this.setImgAngle(Math.random() * 360);
+        this.setSpeed(Math.random() * 20 + 10);
+        this.setMoveAngle(Math.random() * 360);
+        this.image.src = "images/asteroids/asteroid" + Math.round(Math.random() * 7) + ".png";
+    } // end reset
+
+    tAsteroid.collideWith = function(obj, knockback) {
+        angle = getAngleBetween(this, obj);
+
+        this.addVector(angle + 180, knockback);
+        obj.dx *= -1;
+        obj.dy *= -1;
+        obj.calcSpeedAngle();
+    } // end collideWith
+
+    tAsteroid.update = function() {
+        this.addVector(this.getMoveAngle() + 180, this.speed * delta * 0.2);
+        this.updateSelf();
+    } // end update
+
+    return tAsteroid;
+} // end Asteroid
+
 
 // player bullet class
 function Bullet() {
@@ -196,7 +228,7 @@ function Enemy() {
     // chase the target
     tEnemy.chase = function() {
         // get angle to target
-        angle = getAngleBetween(this, this.target) - this.getMoveAngle() - 90;
+        angle = getAngleBetween(this, this.target) - this.getMoveAngle();
         angle %= 360;
 
         // if the enemy is not facing the target
@@ -239,6 +271,8 @@ function Enemy() {
         if (this.turnDirection == 0) {
             this.shoot();
         } // end if
+        // important for bouncing off of asteroids
+        this.imgAngle = this.moveAngle;
         // update other things
         this.updateSelf();
 
