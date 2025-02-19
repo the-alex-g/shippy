@@ -39,6 +39,9 @@ function Shippy() {
     tShippy.health = 5;
     tShippy.turnSpeed = 0.6;
     tShippy.canShoot = true;
+    tShippy.autoShoot = false;
+    tShippy.autoShootToggled = false;
+    tShippy.shootTimer = new Timer();
     // initialize bullets
     tShippy.bullets = new SpriteStack(Bullet, 10);
     // create a shield
@@ -77,15 +80,26 @@ function Shippy() {
             // important for bouncing off of asteroids
             this.imgAngle = this.moveAngle;
         }
+        
+        // toggle auto shoot
+        if (keysDown[K_E]) {
+            if (this.autoShootToggled == false) {
+                this.autoShootToggled = true;
+                this.autoShoot = ! this.autoShoot;
+            }
+        } else {
+            this.autoShootToggled = false;
+        } // end if
 
         // shoot
-        if (keysDown[K_SPACE]) {
-            if (this.canShoot) {
+        if (keysDown[K_SPACE] || this.autoShoot) {
+            if (this.canShoot || (this.autoShoot && this.shootTimer.getElapsedTime() > 0.2 + Math.random() * 0.1)) {
                 // fire a bullet
                 bullet = this.bullets.getNextHidden();
                 bullet.fire(this);
                 this.canShoot = false;
                 this.shootSound.play();
+                this.shootTimer.reset();
             } // end if
         } else {
             // if the space key is released, set canShoot to true
