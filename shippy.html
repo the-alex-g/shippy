@@ -233,8 +233,10 @@
             function toggleMoveMode() {
                 if (shippy.moveMode == "easy") {
                     shippy.moveMode = "hard";
+                    document.getElementById("instrux").innerText = "A/D to turn     W to thrust     SPACE to shoot      E to toggle autofire";
                 } else {
                     shippy.moveMode = "easy";
+                    document.getElementById("instrux").innerText = "A/D to turn     SPACE to shoot      E to toggle autofire";
                 } // end if
                 document.getElementById("modeButton").innerText = "Mode: " + shippy.moveMode;
             } // end toggleMoveMode
@@ -251,5 +253,6 @@
             </div>
             <div id="kennyNotice" class="text">Images courtesy of Kenny</div>
         </div>
+        <pre class="text" id="instrux">A/D to turn      SPACE to shoot      E to toggle autofire</pre>
     </body>
 </html>

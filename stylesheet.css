@@ -46,3 +46,9 @@
     transform: translate(-50%, -50%);
     text-align: center;
 }
+#instrux {
+    margin:auto;
+    width:800px;
+    transform:translate(10px, 649px);
+    text-align:center;
+}
