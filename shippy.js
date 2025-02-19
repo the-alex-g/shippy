@@ -59,9 +59,23 @@ function Shippy() {
     // give shield up/down sounds
     tShippy.shield.enableSound(new Sound("sfx/shieldDown"), new Sound("sfx/shieldUp"));
 
-    // set speed and angle
     tShippy.setAngle(0);
     tShippy.moveMode = "easy";
+
+    tShippy.reset = function() {
+        // reset shippy
+        if (this.moveMode == "easy") {
+            this.setSpeed(200);
+            this.health = 5;
+        } else {
+            this.setSpeed(0.0);
+            this.health = 7; // ??
+        }
+        this.setPosition(400, 300);
+        this.setAngle(-90);
+        this.autoShoot = false;
+        this.shield.visible = true;
+    } // end reset
 
     // check for keyboard input
     tShippy.checkKeys = function(){

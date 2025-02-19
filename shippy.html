@@ -60,16 +60,7 @@
             // reset the game
             function startGame() {
                 gameMode = "play";
-                // reset shippy
-                if (shippy.moveMode == "easy") {
-                    shippy.setSpeed(200);
-                    shippy.health = 5;
-                } else {
-                    shippy.setSpeed(0.0);
-                    shippy.health = 7; // ??
-                }
-                shippy.setPosition(400, 300);
-                shippy.setAngle(0);
+                shippy.reset();
 
                 asteroids.forEach(function(asteroid, m, n) {asteroid.reset();});
 
@@ -226,6 +217,7 @@
                 } else if (gameMode == "pause") {
                     // draw enemies and player, but that's it
                     enemies.forEach(function(enemy, b, c) {enemy.draw();});
+                    asteroids.forEach(function(asteroid, b, c) {asteroid.draw();});
                     shippy.draw();
                 } // end if
             } // end update
