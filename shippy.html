@@ -16,7 +16,7 @@
             var bg;
             var enemyShootSound;
             var explosionSound;
-            var asteroid;
+            var asteroids;
 
             var gameMode = "start";
             var score = 0;
@@ -32,13 +32,15 @@
                 enemyBullets = new SpriteStack(EnemyBullet, 10);
                 enemyShootSound = new Sound("sfx/laser2");
                 explosionSound = new Sound("sfx/explosion");
-                asteroid = new Asteroid();
+                asteroids = new SpriteStack(Asteroid, 2);
 
                 enemies = new SpriteStack(Enemy, 5);
 
                 explosions = new SpriteStack(Explosion, 6);
                 scene.setBG("black");
                 scene.start();
+
+                asteroids.showAll();
             } // end init
 
             function hitEnemy(enemy, scoring) {
@@ -69,7 +71,7 @@
                 shippy.setPosition(400, 300);
                 shippy.setAngle(0);
 
-                asteroid.reset();
+                asteroids.forEach(function(asteroid, m, n) {asteroid.reset();});
 
                 // turn the HUD off
                 toggleHUD(false);
@@ -97,28 +99,41 @@
             
             function collide() {
                 // collide shippy with asteroid
-                if (areColliding(shippy, asteroid)) {
-                    shippy.hit();
-                    asteroid.collideWith(shippy, 50);
-                }
+                asteroids.forEach(
+                    function(asteroid, i, a) {
+                        if (areColliding(shippy, asteroid)) {
+                            shippy.hit();
+                            asteroid.collideWith(shippy, 50);
+                        } // end if
+                    } // end function
+                );
 
                 // collide enemies with asteroid
                 enemies.forEachVisible(
                     function(enemy, index, array) {
-                        if (areColliding(enemy, asteroid)) {
-                            hitEnemy(enemy, false);
-                            asteroid.collideWith(enemy, 50);
-                        } // end if
+                        asteroids.forEach(
+                            function(asteroid, i, a) {
+                                if (areColliding(enemy, asteroid)) {
+                                    hitEnemy(enemy, false);
+                                    asteroid.collideWith(enemy, 50);
+                                } // end if
+                            } // end function
+                        );
                     } // end function
                 );
 
                 // collide ship bullets with enemies and asteroid
                 shippy.bullets.forEachVisible( // for each visible ship bullet
                     function(bullet, index, array) {
-                        if (areColliding(bullet, asteroid)) {
-                            bullet.hide();
-                            asteroid.collideWith(bullet, 20);
-                        } else {
+                        asteroids.forEach(
+                            function(asteroid, i, a) {
+                                if (areColliding(bullet, asteroid)) {
+                                    bullet.hide();
+                                    asteroid.collideWith(bullet, 20);
+                                } // end if
+                            } // end function
+                        );
+                        if (bullet.visible == true) {
                             enemies.forEachVisible( // for each visible enemy
                                 function(enemy, index2, array2) {
                                     // if we have a collision
@@ -136,10 +151,15 @@
                 // collide enemy bullets with player
                 enemyBullets.forEachVisible( // for each visible enemy bullet
                     function(bullet, index, array) {
-                        if (areColliding(asteroid, bullet)) {
-                            bullet.hide();
-                            asteroid.collideWith(bullet, 20);
-                        } else if (areColliding(shippy, bullet)) {
+                        asteroids.forEach(
+                            function(asteroid, a, i) {
+                                if (areColliding(asteroid, bullet)) {
+                                    bullet.hide();
+                                    asteroid.collideWith(bullet, 20);
+                                } // end if
+                            } // end function
+                        );
+                        if (areColliding(shippy, bullet)) {
                             // hide the bullet
                             bullet.hide();
                             // damage the shippy
@@ -182,7 +202,7 @@
                     enemyBullets.update();
                     shippy.update();
                     explosions.update();
-                    asteroid.update();
+                    asteroids.update();
                     // collisions
                     collide();
                     // respawn enemies

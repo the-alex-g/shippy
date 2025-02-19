@@ -86,6 +86,11 @@ function SpriteStack(constructor, count){
     this.hideAll = function() {
         this.forEach(function(a, b, c) {a.hide();});
     } // end hideAll
+
+    // show all the sprites in the array
+    this.showAll = function() {
+        this.forEach(function(a, b, c) {a.show();});
+    }
 } // end SpriteStack
 
 

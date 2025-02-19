@@ -121,7 +121,7 @@ function Asteroid() {
     tAsteroid = new Sprite(scene, "images/asteroids/asteroid0.png", 50, 50);
 
     tAsteroid.reset = function() {
-        this.setPosition(Math.random() * 400, Math.random() * 300);
+        this.setPosition(Math.random() * 800, Math.random() * 600);
         this.setImgAngle(Math.random() * 360);
         this.setSpeed(Math.random() * 20 + 10);
         this.setMoveAngle(Math.random() * 360);
